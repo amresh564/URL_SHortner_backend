@@ -19,6 +19,9 @@ public class UrlController {
     @GetMapping(path = "/short", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getShortUrl(@RequestParam String longUrl) {
 
+        if (longUrl.trim().equals(""))
+            return new ResponseEntity<Object>("Please Enter Some Url", HttpStatus.BAD_REQUEST);
+
         UrlDto url = new UrlDto();
         url.setLongUrl(longUrl);
 
