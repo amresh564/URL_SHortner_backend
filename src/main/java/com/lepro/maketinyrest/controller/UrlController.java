@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@CrossOrigin()
 public class UrlController {
 
     @Autowired
@@ -22,7 +22,6 @@ public class UrlController {
     /*
      * User wants to short the url
      */
-    @CrossOrigin(origins = "*")
     @GetMapping(path = "/short", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getShortUrl(@RequestParam String longUrl, HttpServletRequest req) {
         if (longUrl.trim().equals(""))
@@ -32,6 +31,8 @@ public class UrlController {
 
         UrlDto url = new UrlDto();
         url.setLongUrl(longUrl);
+
+        System.out.println(longUrl);
 
         String shortUrl = urlService.shortUrl(url, baseUrl);
         url.setShortUrl(shortUrl);
@@ -43,13 +44,14 @@ public class UrlController {
     /*
      *   User want to get the long url form the shortened url
      */
-    @GetMapping("/{id}")
-    public RedirectView redirectUser(@PathVariable String id, HttpServletRequest req) {
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> redirectUser(@PathVariable String id, HttpServletRequest req) {
         UrlDto urlDto = new UrlDto();
-
-        urlDto.setShortUrl(id);
+        baseUrl = "" + req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/";
+        urlDto.setShortUrl(baseUrl + id);
 
         urlDto.setLongUrl(urlService.getLongUrl(urlDto));
-        return new RedirectView(urlDto.getLongUrl());
+        System.out.println(urlDto.getLongUrl());
+        return new ResponseEntity<Object>(urlDto, HttpStatus.OK);
     }
 }

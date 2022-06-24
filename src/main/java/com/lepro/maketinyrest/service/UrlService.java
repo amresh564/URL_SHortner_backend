@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class UrlService {
+
     private Map<String, String> longToShort;
     private Map<String, String> shortToLong;
 
@@ -20,11 +22,10 @@ public class UrlService {
         String longUrl = url.getLongUrl();
         String id = generateUniqueId(longUrl);
 
-        longToShort.put(longUrl, id);
-        shortToLong.put(id, longUrl);
+        longToShort.put(longUrl, baseUrl + id);
+        shortToLong.put(baseUrl + id, longUrl);
 
-        return "http://www.tiney/kjdf";
-//        return baseUrl + id;
+        return baseUrl + id;
     }
 
     public String getLongUrl(UrlDto urlDto) {
@@ -32,6 +33,7 @@ public class UrlService {
     }
 
     private String generateUniqueId(String url) {
-        return "";
+        String uuid = UUID.randomUUID().toString();
+        return uuid.substring(0, 4);
     }
 }
