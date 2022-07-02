@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
-@CrossOrigin()
 public class UrlController {
 
     @Autowired
@@ -23,6 +22,7 @@ public class UrlController {
     /*
      * User wants to short the url
      */
+    @CrossOrigin
     @GetMapping(path = "/short", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getShortUrl(@RequestParam String longUrl, HttpServletRequest req) {
         if (longUrl.trim().equals(""))
