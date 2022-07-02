@@ -1,6 +1,9 @@
 package com.lepro.maketinyrest.service;
 
 import com.lepro.maketinyrest.dto.UrlDto;
+import com.lepro.maketinyrest.entity.UrlEntity;
+import com.lepro.maketinyrest.repository.UrlRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,6 +12,9 @@ import java.util.UUID;
 
 @Service
 public class UrlService {
+
+    @Autowired
+    UrlRepository repository;
 
     private Map<String, String> longToShort;
     private Map<String, String> shortToLong;
@@ -24,6 +30,8 @@ public class UrlService {
 
         longToShort.put(longUrl, baseUrl + id);
         shortToLong.put(baseUrl + id, longUrl);
+
+        repository.save(new UrlEntity(baseUrl + id, longUrl));
 
         return baseUrl + id;
     }

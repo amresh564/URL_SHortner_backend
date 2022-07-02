@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 
 @RestController
 @CrossOrigin()
@@ -44,14 +45,16 @@ public class UrlController {
     /*
      *   User want to get the long url form the shortened url
      */
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}")
     public ResponseEntity<Object> redirectUser(@PathVariable String id, HttpServletRequest req) {
         UrlDto urlDto = new UrlDto();
         baseUrl = "" + req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/";
         urlDto.setShortUrl(baseUrl + id);
 
         urlDto.setLongUrl(urlService.getLongUrl(urlDto));
-        System.out.println(urlDto.getLongUrl());
-        return new ResponseEntity<Object>(urlDto, HttpStatus.OK);
+        System.out.println(urlDto);
+
+        String urlToRedirect = urlDto.getLongUrl().toString();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://www."+urlToRedirect)).build();
     }
 }
