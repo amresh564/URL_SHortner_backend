@@ -50,7 +50,7 @@ public class UrlController {
 
         String shortUrl = urlService.shortUrl(url, baseUrl);
         url.setShortUrl(shortUrl);
-        url.setQrUrl("https://www."+longUrl);
+        url.setQrUrl(baseUrl+"image/"+shortUrl.substring(shortUrl.length()-4));
         return new ResponseEntity<Object>(url, HttpStatus.OK);
     }
 
